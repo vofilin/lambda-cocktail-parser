@@ -1,3 +1,8 @@
+# Project specific
+test.py
+sample_event.py
+models/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -36,6 +41,8 @@ MANIFEST
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
+test.py
+sample_event.py
 
 # Unit test / coverage reports
 htmlcov/
