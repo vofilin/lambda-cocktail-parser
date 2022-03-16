@@ -11,7 +11,8 @@ MODEL = os.environ.get('MODEL')
 DEST = '/tmp'
 S3_BUCKET = os.environ.get('S3_BUCKET')
 DYNAMO_URL = os.environ.get('DYNAMO_URL')
-DYNAMO_TABLE = os.environ.get('DYNAMO_TABLE')
+DESCRIPTIONS_DYNAMO_TABLE = os.environ.get('DESCRIPTIONS_DYNAMO_TABLE')
+COCKTAILS_DYNAMO_TABLE = os.environ.get('COCKTAILS_DYNAMO_TABLE')
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -129,19 +130,8 @@ def lambda_handler(event, context):
         if record['eventName'] in ['MODIFY', 'INSERT']:
             description = get_description(
                 record['dynamodb']['Keys']['id']['S'], DYNAMO_URL,
-                "youtube_descriptions")
+                DESCRIPTIONS_DYNAMO_TABLE)
             logger.info("Parsing data")
             cocktails = parse_cocktails(description)
             logger.info(f"Cocktails: {cocktails}")
-            load_cocktails(cocktails, DYNAMO_URL, DYNAMO_TABLE)
-
-# def lambda_handler(event, context):
-#     logger.info(f"Event: {event}")
-#     download_model_from_s3(S3_BUCKET, MODEL, DEST)
-#     logger.info("Parsing data")
-#     for record in event['Records']:
-#         if record['eventName'] in ['MODIFY', 'INSERT']:
-#             cocktails = parse_cocktails(
-#                 record['dynamodb']['NewImage']['description']['S'])
-#         logger.info(f"Cocktails: {cocktails}")
-#         load_cocktails(cocktails, DYNAMO_URL, DYNAMO_TABLE)
+            load_cocktails(cocktails, DYNAMO_URL, COCKTAILS_DYNAMO_TABLE)
